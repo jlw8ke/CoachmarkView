@@ -7,12 +7,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
-import com.mobiquity.coachmarkview.coachmark.CardCoachmark;
 import com.mobiquity.coachmarkview.coachmark.Coachmark;
 import com.mobiquity.coachmarkview.target.BaseTarget;
 import com.mobiquity.coachmarkview.target.Target;
@@ -50,7 +48,7 @@ public class CoachmarkView extends RelativeLayout implements CoachmarkApi {
     private void init() {
         targets = new ArrayList<Target>();
         coachmarkContainer = new CoachmarkContainer();
-        int backgroundColor = Color.argb(128, 80, 80, 80);
+        int backgroundColor = getContext().getResources().getColor(R.color.black_trans);
 
         coachmarkContainer.setBackgroundColor(backgroundColor);
         getViewTreeObserver().addOnGlobalLayoutListener(new UpdateOnGlobalLayout());
@@ -64,8 +62,14 @@ public class CoachmarkView extends RelativeLayout implements CoachmarkApi {
         // Draw the showcase drawable
         for (Target target : targets) {
             Point center = target.getPoint();
+            Point leftCorner = new Point(center.x - target.getWidth()/2, center.y - target.getHeight()/2);
+
             float radius = (float) Math.sqrt(Math.pow(target.getWidth(),2) + Math.pow(target.getHeight(),2));
-            coachmarkContainer.drawCoachmark(bitmapBuffer, center.x, center.y, radius);
+            if(target.isRect()) {
+                coachmarkContainer.drawCoachmark(bitmapBuffer, leftCorner.x, leftCorner.y, target.getWidth(), target.getHeight());
+            }else {
+                coachmarkContainer.drawCoachmark(bitmapBuffer, center.x, center.y, radius);
+            }
             coachmarkContainer.drawToCanvas(canvas, bitmapBuffer);
 
             //Add the coachmark if the target has one and it has not already been added
@@ -138,6 +142,11 @@ public class CoachmarkView extends RelativeLayout implements CoachmarkApi {
     @Override
     public void hide() {
         setVisibility(GONE);
+    }
+
+    @Override
+    public boolean isVisible() {
+        return getVisibility() == VISIBLE;
     }
 
     @Override

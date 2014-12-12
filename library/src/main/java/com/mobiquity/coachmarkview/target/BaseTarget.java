@@ -7,6 +7,7 @@ import com.mobiquity.coachmarkview.coachmark.Coachmark;
  */
 public abstract class BaseTarget implements Target{
     private Coachmark coachmark;
+    private boolean isCropped;
 
     public Coachmark getCoachmark() {
         return coachmark;
@@ -14,5 +15,14 @@ public abstract class BaseTarget implements Target{
 
     public void setCoachmark(Coachmark coachmark) {
         this.coachmark = coachmark;
+    }
+
+    @Override
+    public boolean isRect() {
+        return isCropped;
+    }
+
+    public void setCropped(boolean isCropped) {
+        this.isCropped = isCropped;
     }
 }

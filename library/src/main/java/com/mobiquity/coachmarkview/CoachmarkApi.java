@@ -8,6 +8,7 @@ import com.mobiquity.coachmarkview.target.Target;
 public interface CoachmarkApi {
     public void show();
     public void hide();
+    public boolean isVisible();
 
     public void setTitle(String title);
     public String getTitle();

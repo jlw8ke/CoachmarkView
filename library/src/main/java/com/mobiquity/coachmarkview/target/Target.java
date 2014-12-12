@@ -10,11 +10,12 @@ import com.mobiquity.coachmarkview.coachmark.Coachmark;
 public interface Target {
 
 
-    public abstract Point getPoint();
-    public abstract int getWidth();
-    public abstract int getHeight();
+    public Point getPoint();
+    public int getWidth();
+    public int getHeight();
+    public boolean isRect();
 
-    /*Target NONE = new Target() {
+    Target NONE = new Target() {
         @Override
         public Point getPoint() {
             return new Point(10000, 10000);
@@ -29,6 +30,11 @@ public interface Target {
         public int getHeight() {
             return 0;
         }
-    };*/
+
+        @Override
+        public boolean isRect() {
+            return false;
+        }
+    };
 
 }

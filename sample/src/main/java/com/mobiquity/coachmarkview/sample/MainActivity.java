@@ -32,6 +32,7 @@ public class MainActivity extends ActionBarActivity {
 
         ViewTarget viewTarget1 = new ViewTarget(target1);
         viewTarget1.setCoachmark(new CardCoachmark(this, "Test", "This is a test coachmark", viewTarget1));
+        viewTarget1.setCropped(true);
         coachmarkView = new CoachmarkView.Builder(this)
                 .addTarget(viewTarget1)
                 .addTarget(new ViewTarget(target2))
@@ -59,5 +60,14 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(coachmarkView.isVisible()) {
+            coachmarkView.hide();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

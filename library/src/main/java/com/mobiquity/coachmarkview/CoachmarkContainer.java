@@ -31,9 +31,15 @@ public class CoachmarkContainer {
     public void drawCoachmark(Bitmap buffer, float x, float y, float coachmarkRadius) {
         Canvas bufferCanvas = new Canvas(buffer);
         eraserPaint.setAlpha(0);
-        eraserPaint.setAlpha(0);
         bufferCanvas.drawCircle(x, y, coachmarkRadius, eraserPaint);
     }
+
+    public void drawCoachmark(Bitmap buffer, float x, float y, float width, float height) {
+        Canvas bufferCanvas = new Canvas(buffer);
+        eraserPaint.setAlpha(0);
+        bufferCanvas.drawRect(x, y, x+width, y+height, eraserPaint);
+    }
+
 
     public void erase(Bitmap bitmapBuffer) {
         bitmapBuffer.eraseColor(backgroundColor);
