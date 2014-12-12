@@ -22,13 +22,15 @@ import java.util.ArrayList;
 /**
  * Created by jwashington on 12/12/14.
  */
-public class CoachmarkView extends RelativeLayout {
+public class CoachmarkView extends RelativeLayout implements CoachmarkApi {
 
     ArrayList<Target> targets;
 
     //A bitmap that overlays the window for the coachmarks to draw on
     private Bitmap bitmapBuffer;
+
     String title;
+    String content;
 
     CoachmarkContainer coachmarkContainer;
 
@@ -42,13 +44,7 @@ public class CoachmarkView extends RelativeLayout {
 
     public CoachmarkView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        getAttributes();
         init();
-    }
-
-    private void getAttributes() {
-
     }
 
     private void init() {
@@ -86,7 +82,6 @@ public class CoachmarkView extends RelativeLayout {
             if(bitmapBuffer != null)
                 bitmapBuffer.recycle();
             bitmapBuffer = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-
         }
     }
 
@@ -133,5 +128,45 @@ public class CoachmarkView extends RelativeLayout {
             return coachmarkView;
         }
     }
+
+    //Coachmark API
+    @Override
+    public void show() {
+        setVisibility(VISIBLE);
+    }
+
+    @Override
+    public void hide() {
+        setVisibility(GONE);
+    }
+
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
+        invalidate();
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public void setContent(String content) {
+        this.content = content;
+        invalidate();
+    }
+
+    @Override
+    public String getContent() {
+        return content;
+    }
+
+    @Override
+    public void addTarget(Target target) {
+        targets.add(target);
+        invalidate();
+    }
+
 
 }
