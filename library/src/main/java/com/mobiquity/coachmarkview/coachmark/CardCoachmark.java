@@ -1,7 +1,9 @@
 package com.mobiquity.coachmarkview.coachmark;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.CardView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +20,16 @@ public class CardCoachmark extends Coachmark{
 
     private String content;
     private Target target;
+    private boolean hasPath;
 
     private TextView titleText;
     private TextView contentText;
 
-    public CardCoachmark(Context context, String title, String content, Target target) {
+    public CardCoachmark(Context context, String title, String content, Target target, boolean hasPath) {
         super(context, title);
         this.content = content;
         this.target = target;
+        this.hasPath = hasPath;
 
         view = LayoutInflater.from(context).inflate(R.layout.card_coachmark, null, true);
 
@@ -45,12 +49,8 @@ public class CardCoachmark extends Coachmark{
         return params;
     }
 
-    @Override
-    public void setCoachmarkLocation(int leftMargin, int rightMargin, int topMargin) {
-        ((RelativeLayout.LayoutParams) view.getLayoutParams()).leftMargin = leftMargin;
-        ((RelativeLayout.LayoutParams) view.getLayoutParams()).rightMargin = rightMargin;
-        ((RelativeLayout.LayoutParams) view.getLayoutParams()).topMargin = topMargin;
+    public RelativeLayout.LayoutParams getLayoutParams() {
+        return (RelativeLayout.LayoutParams) view.getLayoutParams();
     }
-
 
 }

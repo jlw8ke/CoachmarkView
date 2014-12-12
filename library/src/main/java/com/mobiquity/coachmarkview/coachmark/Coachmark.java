@@ -24,8 +24,6 @@ public abstract class Coachmark {
         this.title = title;
     }
 
-    public abstract void setCoachmarkLocation(int leftMargin, int rightMargin, int topMargin);
-
     public View getView() {
         return view;
     }
