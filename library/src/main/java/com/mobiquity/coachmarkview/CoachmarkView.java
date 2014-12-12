@@ -7,10 +7,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
+import com.mobiquity.coachmarkview.coachmark.CardCoachmark;
+import com.mobiquity.coachmarkview.coachmark.Coachmark;
+import com.mobiquity.coachmarkview.target.BaseTarget;
 import com.mobiquity.coachmarkview.target.Target;
 
 import java.util.ArrayList;
@@ -21,6 +25,8 @@ import java.util.ArrayList;
 public class CoachmarkView extends RelativeLayout {
 
     ArrayList<Target> targets;
+
+    //A bitmap that overlays the window for the coachmarks to draw on
     private Bitmap bitmapBuffer;
     String title;
 
@@ -65,6 +71,12 @@ public class CoachmarkView extends RelativeLayout {
             float radius = (float) Math.sqrt(Math.pow(target.getWidth(),2) + Math.pow(target.getHeight(),2));
             coachmarkContainer.drawCoachmark(bitmapBuffer, center.x, center.y, radius);
             coachmarkContainer.drawToCanvas(canvas, bitmapBuffer);
+
+            //Add the coachmark if the target has one and it has not already been added
+            Coachmark coachmark = ((BaseTarget)target).getCoachmark();
+            if(coachmark != null && coachmark.getView().getParent() == null) {
+                addView(coachmark.getView());
+            }
         }
         super.dispatchDraw(canvas);
     }

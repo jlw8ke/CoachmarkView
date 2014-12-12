@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.mobiquity.coachmarkview.CoachmarkView;
+import com.mobiquity.coachmarkview.coachmark.CardCoachmark;
 import com.mobiquity.coachmarkview.target.ViewTarget;
 
 import butterknife.ButterKnife;
@@ -29,8 +30,10 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
+        ViewTarget viewTarget1 = new ViewTarget(target1);
+        viewTarget1.setCoachmark(new CardCoachmark(this, "Test", "This is a test coachmark", viewTarget1));
         coachmarkView = new CoachmarkView.Builder(this)
-                .addTarget(new ViewTarget(target1))
+                .addTarget(viewTarget1)
                 .addTarget(new ViewTarget(target2))
                 .build();
     }
