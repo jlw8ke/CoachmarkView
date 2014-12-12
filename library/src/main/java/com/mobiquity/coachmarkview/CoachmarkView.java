@@ -76,6 +76,7 @@ public class CoachmarkView extends RelativeLayout implements CoachmarkApi {
             Coachmark coachmark = ((BaseTarget)target).getCoachmark();
             if(coachmark != null && coachmark.getView().getParent() == null) {
                 addView(coachmark.getView());
+               // addView(coachmark.getSegments());
             }
         }
         super.dispatchDraw(canvas);
@@ -176,6 +177,4 @@ public class CoachmarkView extends RelativeLayout implements CoachmarkApi {
         targets.add(target);
         invalidate();
     }
-
-
 }

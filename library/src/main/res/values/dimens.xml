@@ -4,4 +4,7 @@
     <dimen name="coachmark_right_default">50dp</dimen>
     <dimen name="coachmark_top_default">100dp</dimen>
 
+    <dimen name="stroke_width_default">1dp</dimen>
+    <dimen name="radius_default">5dp</dimen>
+
 </resources>

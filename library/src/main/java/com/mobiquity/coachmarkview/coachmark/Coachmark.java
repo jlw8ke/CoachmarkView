@@ -27,4 +27,6 @@ public abstract class Coachmark {
     public View getView() {
         return view;
     }
+
+    public abstract View getSegments();
 }

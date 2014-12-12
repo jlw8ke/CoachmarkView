@@ -42,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
                 .addTarget(viewTarget1)
                 .addTarget(new ViewTarget(target2))
                 .build();
+
     }
 
 
