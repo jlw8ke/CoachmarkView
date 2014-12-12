@@ -38,11 +38,15 @@ public class CardCoachmark extends Coachmark{
     int strokeWidth;
     int circleRadius;
 
-    public CardCoachmark(Context context, String title, String content, Target target, boolean hasPath) {
+
+
+    private PathGenerator.SegmentPath path;
+
+    public CardCoachmark(Context context, String title, String content, Target target, PathGenerator.SegmentPath path) {
         super(context, title);
         this.content = content;
         this.target = target;
-        this.hasPath = hasPath;
+        this.path = path;
 
         strokeWidth = context.getResources().getDimensionPixelSize(R.dimen.stroke_width_default);
         circleRadius = context.getResources().getDimensionPixelSize(R.dimen.radius_default);
@@ -89,21 +93,7 @@ public class CardCoachmark extends Coachmark{
     }
 
     public View getSegments() {
-        Point targetCenter = target.getPoint();
-        Point targetTopCenter = new Point(targetCenter.x, targetCenter.y - target.getHeight()/2);
-        Point targetLeftCenter = new Point(targetCenter.x - target.getWidth()/2, targetCenter.y);
-        Point targetRightCenter = new Point(targetCenter.x + target.getWidth()/2, targetCenter.y);
-        Point targetBottomCenter = new Point(targetCenter.x, targetCenter.y + target.getHeight()/2);
-
-        Point cardCenter = new Point((int)view.getX()+view.getWidth()/2, (int)view.getY()+view.getHeight()/2);
-        Point cardTopCenter = new Point(cardCenter.x, cardCenter.y - view.getHeight()/2);
-        Point cardLeftCenter = new Point(cardCenter.x - view.getWidth()/2, cardCenter.y);
-        Point cardRightCenter = new Point(cardCenter.x + view.getWidth()/2, cardCenter.y);
-        Point cardBottomCenter = new Point(cardCenter.x, cardCenter.y + view.getHeight()/2);
-
-
-        List<Point> points = Arrays.asList(targetRightCenter, cardTopCenter);
-
+        List<Point> points = PathGenerator.generatePath(target, view, path);
         return new SegmentView(context, points, Color.WHITE);
     }
 
