@@ -50,7 +50,24 @@ public class PathGenerator {
                 points.add(targetLeftCenter);
                 points.add(new Point(coachmarkRightCenter.x, targetLeftCenter.y ));
                 break;
-
+            case UP:
+                points.add(targetTopCenter);
+                points.add(new Point(targetTopCenter.x, coachmarkBottomCenter.y));
+                break;
+            case DOWN:
+                points.add(targetBottomCenter);
+                points.add(new Point(targetBottomCenter.x, coachmarkTopCenter.y));
+                break;
+            case LEFT_DOWN:
+                points.add(targetRightCenter);
+                points.add(new Point(coachmarkTopCenter.x, targetRightCenter.y));
+                points.add(coachmarkTopCenter);
+                break;
+            case LEFT_UP:
+                points.add(targetRightCenter);
+                points.add(new Point(coachmarkBottomCenter.x, targetRightCenter.y));
+                points.add(coachmarkBottomCenter);
+                break;
         }
 
         return points;

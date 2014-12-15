@@ -64,6 +64,7 @@ public class CardCoachmark extends Coachmark{
             @Override
             public void onGlobalLayout() {
                 View segments = getSegments();
+                segments.setElevation(view.getElevation());
                 ViewGroup parent = (ViewGroup) view.getParent();
                 parent.addView(segments);
                 parent.bringChildToFront(segments);
@@ -80,16 +81,22 @@ public class CardCoachmark extends Coachmark{
         this.circleRadius = circleRadius;
     }
 
+    @Override
+    public void setPosition(int x, int y, boolean centered) {
+        ((RelativeLayout.LayoutParams)view.getLayoutParams()).leftMargin = x;
+        if(centered) {
+            ((RelativeLayout.LayoutParams) view.getLayoutParams()).rightMargin = x;
+        }
+
+        ((RelativeLayout.LayoutParams)view.getLayoutParams()).topMargin = y;
+    }
+
     private ViewGroup.LayoutParams defaultBounds() {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.leftMargin = context.getResources().getDimensionPixelSize(R.dimen.coachmark_left_default);
         params.rightMargin = context.getResources().getDimensionPixelSize(R.dimen.coachmark_right_default);
         params.topMargin = context.getResources().getDimensionPixelSize(R.dimen.coachmark_top_default);
         return params;
-    }
-
-    public RelativeLayout.LayoutParams getLayoutParams() {
-        return (RelativeLayout.LayoutParams) view.getLayoutParams();
     }
 
     public View getSegments() {
@@ -99,6 +106,7 @@ public class CardCoachmark extends Coachmark{
 
     private class SegmentView extends View {
         Paint paint;
+        Paint circlePaint;
         List<Point> points;
 
         public SegmentView(Context context, List<Point> points, int color) {
@@ -108,8 +116,11 @@ public class CardCoachmark extends Coachmark{
             paint = new Paint();
             paint.setColor(color);
             paint.setStrokeWidth(strokeWidth);
-            paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            paint.setStyle(Paint.Style.STROKE);
             paint.setFlags(Paint.ANTI_ALIAS_FLAG);
+
+            circlePaint = new Paint(paint);
+            circlePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         }
 
         @Override
@@ -122,8 +133,8 @@ public class CardCoachmark extends Coachmark{
             for(Point point : points.subList(1, points.size())) {
                 segmentPath.lineTo(point.x, point.y);
             }
-            segmentPath.addCircle(endingPoint.x, endingPoint.y, circleRadius, Path.Direction.CW);
             canvas.drawPath(segmentPath, paint);
+            canvas.drawCircle(endingPoint.x, endingPoint.y, circleRadius, circlePaint);
             super.dispatchDraw(canvas);
         }
     }

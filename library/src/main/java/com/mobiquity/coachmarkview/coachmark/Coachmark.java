@@ -29,4 +29,6 @@ public abstract class Coachmark {
     }
 
     public abstract View getSegments();
+
+    public abstract void setPosition(int x, int y, boolean centered);
 }

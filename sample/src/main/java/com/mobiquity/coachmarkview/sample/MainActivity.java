@@ -33,9 +33,8 @@ public class MainActivity extends ActionBarActivity {
         ButterKnife.inject(this);
 
         ViewTarget viewTarget1 = new ViewTarget(target1);
-        CardCoachmark coachmark1 = new CardCoachmark(this, "Test", "This is a test coachmark", viewTarget1, PathGenerator.SegmentPath.LEFT);
-        coachmark1.getLayoutParams().leftMargin = getResources().getDimensionPixelSize(R.dimen.left);
-        coachmark1.getLayoutParams().topMargin = getResources().getDimensionPixelSize(R.dimen.top);
+        CardCoachmark coachmark1 = new CardCoachmark(this, "Test", "This is a test coachmark", viewTarget1, PathGenerator.SegmentPath.LEFT_DOWN);
+        coachmark1.setPosition(getResources().getDimensionPixelSize(R.dimen.left), getResources().getDimensionPixelSize(R.dimen.top), false);
         viewTarget1.setCropped(true);
         viewTarget1.setCoachmark(coachmark1);
 
