@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 
 class CoachmarkStore {
     private static final String COACHMARK_PREFS = "internal_coachmark_prefs";
+    public static final int ALWAYS_SHOW = -1;
 
     private Context context;
-    SharedPreferences internalPrefs;
+    private SharedPreferences internalPrefs;
+
 
     public CoachmarkStore(Context context) {
         this.context = context;
@@ -15,10 +17,15 @@ class CoachmarkStore {
     }
 
     void storeCoachmarkState(int coachmarkId, boolean shouldShow) {
-        internalPrefs.edit().putBoolean(Integer.toString(coachmarkId), shouldShow).apply();
+        if(coachmarkId != ALWAYS_SHOW) {
+            internalPrefs.edit().putBoolean(Integer.toString(coachmarkId), shouldShow).apply();
+        }
     }
 
     boolean getCoachmarkState(int coachmarkId) {
+        if(coachmarkId == ALWAYS_SHOW) {
+            return true;
+        }
         return internalPrefs.getBoolean(Integer.toString(coachmarkId), true);
     }
 }

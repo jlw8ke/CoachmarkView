@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -22,9 +23,10 @@ import butterknife.ButterKnife;
 /**
  * Created by jwashington on 12/12/14.
  */
-public class CoachmarkView extends RelativeLayout {
+public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
 
     List<Coachmark> coachmarks;
+    private final CoachmarkStore coachmarkStore;
 
     //A bitmap that overlays the window for the coachmarks to draw on
     Bitmap bitmapBuffer;
@@ -32,7 +34,7 @@ public class CoachmarkView extends RelativeLayout {
 
     View titleView;
     TextView titleTextView;
-    int id;
+    int id = CoachmarkStore.ALWAYS_SHOW;
 
     public CoachmarkView(Context context) {
         this(context, null);
@@ -44,6 +46,7 @@ public class CoachmarkView extends RelativeLayout {
 
     public CoachmarkView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        coachmarkStore = new CoachmarkStore(getContext());
         init();
     }
 
@@ -51,8 +54,11 @@ public class CoachmarkView extends RelativeLayout {
         coachmarks = new ArrayList<>();
         int backgroundColor = getContext().getResources().getColor(R.color.black_trans);
         coahcmarkOverlay = new CoachmarkOverlay(backgroundColor);
+        setOnKeyListener(this);
 
         getViewTreeObserver().addOnGlobalLayoutListener(new UpdateOnGlobalLayout());
+        setFocusableInTouchMode(true);
+        requestFocus();
     }
 
     public void setTitleView(View titleView, int textViewId) {
@@ -61,6 +67,11 @@ public class CoachmarkView extends RelativeLayout {
         titleTextView = ButterKnife.findById(titleView, textViewId);
         addView(this.titleView);
         invalidate();
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
@@ -96,6 +107,15 @@ public class CoachmarkView extends RelativeLayout {
         super.dispatchDraw(canvas);
     }
 
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            hide();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     private class UpdateOnGlobalLayout implements ViewTreeObserver.OnGlobalLayoutListener {
         @Override
         public void onGlobalLayout() {
@@ -122,10 +142,17 @@ public class CoachmarkView extends RelativeLayout {
 
     public void hide() {
         setVisibility(GONE);
+        coachmarkStore.storeCoachmarkState(id, false);
     }
 
     public void show() {
         setVisibility(VISIBLE);
+        updateBitmap();
+    }
+
+    public boolean shouldShow() {
+        return !coachmarks.isEmpty() &&
+                coachmarkStore.getCoachmarkState(id);
     }
 
     public static class Builder {
@@ -147,8 +174,15 @@ public class CoachmarkView extends RelativeLayout {
             return this;
         }
 
+        public Builder setId(int id) {
+            coachmarkView.id = id;
+            return this;
+        }
+
         public CoachmarkView build() {
-            insertCoachmarkView();
+            if(coachmarkView.shouldShow()) {
+                insertCoachmarkView();
+            }
             return coachmarkView;
         }
 

@@ -54,6 +54,7 @@ public class MainActivity extends ActionBarActivity {
                 .addCoachmark(coachmark1)
                 .addCoachmark(new Coachmark.None(this, new ViewTarget(target2)))
                 .setTitleView(titleBar, R.id.coachmark_view_title)
+                .setId(1)
                 .build();
     }
 
@@ -80,12 +81,4 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        if(coachmarkView.isVisible()) {
-            coachmarkView.hide();
-        } else {
-            super.onBackPressed();
-        }
-    }
 }
