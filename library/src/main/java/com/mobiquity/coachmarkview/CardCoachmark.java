@@ -19,7 +19,6 @@ import com.mobiquity.coachmarkview.target.Target;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by jwashington on 12/12/14.
