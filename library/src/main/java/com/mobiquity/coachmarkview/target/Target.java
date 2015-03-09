@@ -2,20 +2,31 @@ package com.mobiquity.coachmarkview.target;
 
 import android.graphics.Point;
 
-import com.mobiquity.coachmarkview.coachmark.Coachmark;
+public abstract class Target {
 
-/**
- * Created by jwashington on 12/12/14.
- */
-public interface Target {
+    public enum TargetStyle {
+        CIRCLE, RECT
+    }
 
+    public enum TargetSize {
+        NORMAL, MINI
+    }
 
-    public Point getPoint();
-    public int getWidth();
-    public int getHeight();
-    public boolean isRect();
+    protected TargetStyle targetStyle = TargetStyle.CIRCLE;
 
-    Target NONE = new Target() {
+    public abstract Point getPoint();
+    public abstract int getWidth();
+    public abstract int getHeight();
+
+    public TargetStyle getTargetStyle() {
+        return targetStyle;
+    }
+
+    public void setTargetStyle(TargetStyle targetStyle) {
+        this.targetStyle = targetStyle;
+    }
+
+    public class None extends Target {
         @Override
         public Point getPoint() {
             return new Point(10000, 10000);
@@ -31,10 +42,5 @@ public interface Target {
             return 0;
         }
 
-        @Override
-        public boolean isRect() {
-            return false;
-        }
     };
-
 }

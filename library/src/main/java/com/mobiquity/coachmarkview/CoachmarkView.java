@@ -4,33 +4,31 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.mobiquity.coachmarkview.coachmark.Coachmark;
-import com.mobiquity.coachmarkview.target.BaseTarget;
 import com.mobiquity.coachmarkview.target.Target;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jwashington on 12/12/14.
  */
-public class CoachmarkView extends RelativeLayout implements CoachmarkApi {
+public class CoachmarkView extends RelativeLayout {
 
-    ArrayList<Target> targets;
+    List<Coachmark> coachmarks;
 
     //A bitmap that overlays the window for the coachmarks to draw on
-    private Bitmap bitmapBuffer;
+    Bitmap bitmapBuffer;
+    CoachmarkOverlay coahcmarkOverlay;
 
-    String title;
-    String content;
-
-    CoachmarkContainer coachmarkContainer;
+    View titleView;
 
     public CoachmarkView(Context context) {
         this(context, null);
@@ -46,39 +44,52 @@ public class CoachmarkView extends RelativeLayout implements CoachmarkApi {
     }
 
     private void init() {
-        targets = new ArrayList<Target>();
-        coachmarkContainer = new CoachmarkContainer();
+        coachmarks = new ArrayList<>();
         int backgroundColor = getContext().getResources().getColor(R.color.black_trans);
+        coahcmarkOverlay = new CoachmarkOverlay(backgroundColor);
 
-        coachmarkContainer.setBackgroundColor(backgroundColor);
         getViewTreeObserver().addOnGlobalLayoutListener(new UpdateOnGlobalLayout());
     }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        //Draw background color
-        coachmarkContainer.erase(bitmapBuffer);
+        // Draw darkened overlay
+        coahcmarkOverlay.erase(bitmapBuffer);
 
-        // Draw the showcase drawable
-        for (Target target : targets) {
+        for (Coachmark coachmark : coachmarks) {
+            Target target = coachmark.getTarget();
             Point center = target.getPoint();
             Point leftCorner = new Point(center.x - target.getWidth()/2, center.y - target.getHeight()/2);
 
-            float radius = (float) Math.sqrt(Math.pow(target.getWidth(),2) + Math.pow(target.getHeight(),2));
-            if(target.isRect()) {
-                coachmarkContainer.drawCoachmark(bitmapBuffer, leftCorner.x, leftCorner.y, target.getWidth(), target.getHeight());
-            }else {
-                coachmarkContainer.drawCoachmark(bitmapBuffer, center.x, center.y, radius);
+            // Punch hole through overlay to
+            switch (target.getTargetStyle()) {
+                case CIRCLE:
+                    float radius = (float) Math.sqrt(Math.pow(target.getWidth(),2) + Math.pow(target.getHeight(),2));
+                    coahcmarkOverlay.drawCircleCoachmark(bitmapBuffer, center.x, center.y, radius);
+                    break;
+                case RECT:
+                    coahcmarkOverlay.drawRectCoachmark(bitmapBuffer, leftCorner.x, leftCorner.y, target.getWidth(), target.getHeight());
+                    break;
             }
-            coachmarkContainer.drawToCanvas(canvas, bitmapBuffer);
+
+            coahcmarkOverlay.drawToCanvas(canvas, bitmapBuffer);
 
             //Add the coachmark if the target has one and it has not already been added
-            Coachmark coachmark = ((BaseTarget)target).getCoachmark();
             if(coachmark != null && coachmark.getView().getParent() == null) {
                 addView(coachmark.getView());
             }
         }
         super.dispatchDraw(canvas);
+    }
+
+
+
+    // Class to calculate the
+    private class UpdateOnGlobalLayout implements ViewTreeObserver.OnGlobalLayoutListener {
+        @Override
+        public void onGlobalLayout() {
+            updateBitmap();
+        }
     }
 
     private void updateBitmap() {
@@ -94,18 +105,20 @@ public class CoachmarkView extends RelativeLayout implements CoachmarkApi {
                 getMeasuredHeight() != bitmapBuffer.getHeight();
     }
 
-    private class UpdateOnGlobalLayout implements ViewTreeObserver.OnGlobalLayoutListener {
-        @Override
-        public void onGlobalLayout() {
-            updateBitmap();
-        }
-    }
 
     private static void insertCoachmarkView(CoachmarkView coachmarkView, Activity activity) {
         ((ViewGroup) activity.getWindow().getDecorView()).addView(coachmarkView);
     }
 
-    public static class Builder implements CoachmarkBuilder{
+    public boolean isVisible() {
+        return getVisibility() == VISIBLE;
+    }
+
+    public void hide() {
+        setVisibility(GONE);
+    }
+
+    public static class Builder {
         final CoachmarkView coachmarkView;
         private final Activity activity;
 
@@ -114,66 +127,20 @@ public class CoachmarkView extends RelativeLayout implements CoachmarkApi {
             coachmarkView = new CoachmarkView(activity);
         }
 
-        @Override
-        public Builder addTarget(Target target) {
-            coachmarkView.targets.add(target);
+        public Builder addCoachmark(Coachmark coachmark) {
+            coachmarkView.coachmarks.add(coachmark);
             return this;
         }
 
-        @Override
-        public Builder setTitle(String title) {
-            coachmarkView.title = title;
+        public Builder setTitleView(View titleView) {
+            coachmarkView.titleView = titleView;
             return this;
         }
 
-        @Override
         public CoachmarkView build() {
             insertCoachmarkView(coachmarkView, activity);
             return coachmarkView;
         }
     }
 
-    //Coachmark API
-    @Override
-    public void show() {
-        setVisibility(VISIBLE);
-    }
-
-    @Override
-    public void hide() {
-        setVisibility(GONE);
-    }
-
-    @Override
-    public boolean isVisible() {
-        return getVisibility() == VISIBLE;
-    }
-
-    @Override
-    public void setTitle(String title) {
-        this.title = title;
-        invalidate();
-    }
-
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public void setContent(String content) {
-        this.content = content;
-        invalidate();
-    }
-
-    @Override
-    public String getContent() {
-        return content;
-    }
-
-    @Override
-    public void addTarget(Target target) {
-        targets.add(target);
-        invalidate();
-    }
 }

@@ -1,14 +1,12 @@
-package com.mobiquity.coachmarkview.coachmark;
+package com.mobiquity.coachmarkview;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.support.v7.widget.CardView;
-import android.util.TypedValue;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,55 +14,46 @@ import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mobiquity.coachmarkview.R;
 import com.mobiquity.coachmarkview.target.Target;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * Created by jwashington on 12/12/14.
  */
-public class CardCoachmark extends Coachmark{
-
-    private String content;
-    private Target target;
-    private boolean hasPath;
-
+public class CardCoachmark implements Coachmark{
+    private Context context;
+    private View view;
     private TextView titleText;
     private TextView contentText;
 
-    int strokeWidth;
-    int circleRadius;
-
-
-
+    private Target target;
     private PathGenerator.SegmentPath path;
 
-    public CardCoachmark(Context context, String title, String content, Target target, PathGenerator.SegmentPath path) {
-        super(context, title);
-        this.content = content;
+    int strokeWidth;
+    int markerRadius;
+
+    public CardCoachmark(Context context, Target target, PathGenerator.SegmentPath path) {
+        this.context = context;
         this.target = target;
         this.path = path;
 
         strokeWidth = context.getResources().getDimensionPixelSize(R.dimen.stroke_width_default);
-        circleRadius = context.getResources().getDimensionPixelSize(R.dimen.radius_default);
+        markerRadius = context.getResources().getDimensionPixelSize(R.dimen.radius_default);
 
         view = LayoutInflater.from(context).inflate(R.layout.card_coachmark, null, true);
-
-        titleText = (TextView) view.findViewById(R.id.coachmark_title);
-        contentText = (TextView) view.findViewById(R.id.coachmark_content);
-
-        titleText.setText(title);
-        contentText.setText(content);
+        titleText = ButterKnife.findById(view, R.id.coachmark_title);
+        contentText = ButterKnife.findById(view, R.id.coachmark_content);
         view.setLayoutParams(defaultBounds());
 
         view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 View segments = getSegments();
-                segments.setElevation(view.getElevation());
+                ViewCompat.setElevation(segments, ViewCompat.getElevation(view));
                 ViewGroup parent = (ViewGroup) view.getParent();
                 parent.addView(segments);
                 parent.bringChildToFront(segments);
@@ -73,22 +62,54 @@ public class CardCoachmark extends Coachmark{
         });
     }
 
+    public String getTitle() {
+        return titleText.getText().toString();
+    }
+
+    public void setTitle(String title) {
+        titleText.setText(title);
+    }
+
+    public String getContent() {
+        return contentText.getText().toString();
+    }
+
+    public void setContent(String content) {
+        contentText.setText(content);
+    }
+
     public void setStrokeWidth(int strokeWidth) {
         this.strokeWidth = strokeWidth;
     }
 
-    public void setCircleRadius(int circleRadius) {
-        this.circleRadius = circleRadius;
+    public void setMarkerRadius(int markerRadius) {
+        this.markerRadius = markerRadius;
     }
 
     @Override
     public void setPosition(int x, int y, boolean centered) {
-        ((RelativeLayout.LayoutParams)view.getLayoutParams()).leftMargin = x;
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        params.leftMargin = x;
         if(centered) {
-            ((RelativeLayout.LayoutParams) view.getLayoutParams()).rightMargin = x;
+            params.rightMargin = x;
         }
+        params.topMargin = y;
+        view.setLayoutParams(params);
+    }
 
-        ((RelativeLayout.LayoutParams)view.getLayoutParams()).topMargin = y;
+    @Override
+    public Target getTarget() {
+        return target;
+    }
+
+    @Override
+    public void setTarget(Target target) {
+        this.target = target;
+    }
+
+    @Override
+    public View getView() {
+        return view;
     }
 
     private ViewGroup.LayoutParams defaultBounds() {
@@ -134,7 +155,7 @@ public class CardCoachmark extends Coachmark{
                 segmentPath.lineTo(point.x, point.y);
             }
             canvas.drawPath(segmentPath, paint);
-            canvas.drawCircle(endingPoint.x, endingPoint.y, circleRadius, circlePaint);
+            canvas.drawCircle(endingPoint.x, endingPoint.y, markerRadius, circlePaint);
             super.dispatchDraw(canvas);
         }
     }

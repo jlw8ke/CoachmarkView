@@ -1,4 +1,4 @@
-package com.mobiquity.coachmarkview.coachmark;
+package com.mobiquity.coachmarkview;
 
 import android.graphics.Point;
 import android.view.View;

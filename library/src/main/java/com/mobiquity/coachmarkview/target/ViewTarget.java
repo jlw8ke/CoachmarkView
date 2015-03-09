@@ -4,14 +4,8 @@ import android.app.Activity;
 import android.graphics.Point;
 import android.view.View;
 
-import com.mobiquity.coachmarkview.coachmark.Coachmark;
-
-/**
- * Created by jwashington on 12/12/14.
- */
-public class ViewTarget extends BaseTarget{
+public class ViewTarget extends Target {
     private final View view;
-    private Coachmark coachmark;
 
     public ViewTarget(View view) {
         this.view = view;

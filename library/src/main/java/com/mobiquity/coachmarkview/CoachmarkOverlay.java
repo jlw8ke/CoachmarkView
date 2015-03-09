@@ -9,16 +9,16 @@ import android.graphics.PorterDuffXfermode;
 /**
  * Class responsible for drawing the darkened overlay and exposing the views showcased
  */
-public class CoachmarkContainer {
-
-    private static final int ALPHA_60_PERCENT = 153;
+class CoachmarkOverlay {
 
     final Paint eraserPaint;
     final Paint paint;
 
     int backgroundColor;
 
-    public CoachmarkContainer() {
+    public CoachmarkOverlay(int backgroundColor) {
+        this.backgroundColor = backgroundColor;
+
         eraserPaint = new Paint();
         eraserPaint.setColor(0xFFFFFF);
         eraserPaint.setAlpha(0);
@@ -28,18 +28,17 @@ public class CoachmarkContainer {
         paint = new Paint();
     }
 
-    public void drawCoachmark(Bitmap buffer, float x, float y, float coachmarkRadius) {
+    public void drawCircleCoachmark(Bitmap buffer, float x, float y, float coachmarkRadius) {
         Canvas bufferCanvas = new Canvas(buffer);
         eraserPaint.setAlpha(0);
         bufferCanvas.drawCircle(x, y, coachmarkRadius, eraserPaint);
     }
 
-    public void drawCoachmark(Bitmap buffer, float x, float y, float width, float height) {
+    public void drawRectCoachmark(Bitmap buffer, float x, float y, float width, float height) {
         Canvas bufferCanvas = new Canvas(buffer);
         eraserPaint.setAlpha(0);
         bufferCanvas.drawRect(x, y, x+width, y+height, eraserPaint);
     }
-
 
     public void erase(Bitmap bitmapBuffer) {
         bitmapBuffer.eraseColor(backgroundColor);
@@ -48,6 +47,7 @@ public class CoachmarkContainer {
     public void setBackgroundColor(int backgroundColor) {
         this.backgroundColor = backgroundColor;
     }
+
     public void drawToCanvas(Canvas canvas, Bitmap bitmapBuffer) {
         canvas.drawBitmap(bitmapBuffer, 0, 0, paint);
     }
