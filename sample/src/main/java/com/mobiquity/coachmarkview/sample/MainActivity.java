@@ -2,8 +2,11 @@ package com.mobiquity.coachmarkview.sample;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.mobiquity.coachmarkview.Coachmark;
@@ -38,9 +41,19 @@ public class MainActivity extends ActionBarActivity {
         coachmark1.setContent("This is a test card coachmark");
         coachmark1.setPosition(getResources().getDimensionPixelSize(R.dimen.left), getResources().getDimensionPixelSize(R.dimen.top), false);
 
+        View titleBar = LayoutInflater.from(this).inflate(R.layout.coachmark_title, null, false);
+        ImageButton closeButton = ButterKnife.findById(titleBar, R.id.coachmark_view_close);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                coachmarkView.hide();
+            }
+        });
+
         coachmarkView = new CoachmarkView.Builder(this)
                 .addCoachmark(coachmark1)
                 .addCoachmark(new Coachmark.None(this, new ViewTarget(target2)))
+                .setTitleView(titleBar, R.id.coachmark_view_title)
                 .build();
     }
 

@@ -17,6 +17,8 @@ import com.mobiquity.coachmarkview.target.Target;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by jwashington on 12/12/14.
  */
@@ -29,6 +31,8 @@ public class CoachmarkView extends RelativeLayout {
     CoachmarkOverlay coahcmarkOverlay;
 
     View titleView;
+    TextView titleTextView;
+    int id;
 
     public CoachmarkView(Context context) {
         this(context, null);
@@ -51,6 +55,14 @@ public class CoachmarkView extends RelativeLayout {
         getViewTreeObserver().addOnGlobalLayoutListener(new UpdateOnGlobalLayout());
     }
 
+    public void setTitleView(View titleView, int textViewId) {
+        removeAllViews();
+        this.titleView = titleView;
+        titleTextView = ButterKnife.findById(titleView, textViewId);
+        addView(this.titleView);
+        invalidate();
+    }
+
     @Override
     protected void dispatchDraw(Canvas canvas) {
         // Draw darkened overlay
@@ -61,15 +73,17 @@ public class CoachmarkView extends RelativeLayout {
             Point center = target.getPoint();
             Point leftCorner = new Point(center.x - target.getWidth()/2, center.y - target.getHeight()/2);
 
-            // Punch hole through overlay to
-            switch (target.getTargetStyle()) {
-                case CIRCLE:
-                    float radius = (float) Math.sqrt(Math.pow(target.getWidth(),2) + Math.pow(target.getHeight(),2));
-                    coahcmarkOverlay.drawCircleCoachmark(bitmapBuffer, center.x, center.y, radius);
-                    break;
-                case RECT:
-                    coahcmarkOverlay.drawRectCoachmark(bitmapBuffer, leftCorner.x, leftCorner.y, target.getWidth(), target.getHeight());
-                    break;
+            // Punch hole through overlay to show target
+            if(target != null) {
+                switch (target.getTargetStyle()) {
+                    case CIRCLE:
+                        float radius = (float) Math.sqrt(Math.pow(target.getWidth(), 2) + Math.pow(target.getHeight(), 2));
+                        coahcmarkOverlay.drawCircleCoachmark(bitmapBuffer, center.x, center.y, radius);
+                        break;
+                    case RECT:
+                        coahcmarkOverlay.drawRectCoachmark(bitmapBuffer, leftCorner.x, leftCorner.y, target.getWidth(), target.getHeight());
+                        break;
+                }
             }
 
             coahcmarkOverlay.drawToCanvas(canvas, bitmapBuffer);
@@ -82,9 +96,6 @@ public class CoachmarkView extends RelativeLayout {
         super.dispatchDraw(canvas);
     }
 
-
-
-    // Class to calculate the
     private class UpdateOnGlobalLayout implements ViewTreeObserver.OnGlobalLayoutListener {
         @Override
         public void onGlobalLayout() {
@@ -105,17 +116,16 @@ public class CoachmarkView extends RelativeLayout {
                 getMeasuredHeight() != bitmapBuffer.getHeight();
     }
 
-
-    private static void insertCoachmarkView(CoachmarkView coachmarkView, Activity activity) {
-        ((ViewGroup) activity.getWindow().getDecorView()).addView(coachmarkView);
-    }
-
     public boolean isVisible() {
         return getVisibility() == VISIBLE;
     }
 
     public void hide() {
         setVisibility(GONE);
+    }
+
+    public void show() {
+        setVisibility(VISIBLE);
     }
 
     public static class Builder {
@@ -132,14 +142,18 @@ public class CoachmarkView extends RelativeLayout {
             return this;
         }
 
-        public Builder setTitleView(View titleView) {
-            coachmarkView.titleView = titleView;
+        public Builder setTitleView(View titleView, int titleTextId) {
+            coachmarkView.setTitleView(titleView, titleTextId);
             return this;
         }
 
         public CoachmarkView build() {
-            insertCoachmarkView(coachmarkView, activity);
+            insertCoachmarkView();
             return coachmarkView;
+        }
+
+        private void insertCoachmarkView() {
+            ((ViewGroup) activity.getWindow().getDecorView()).addView(coachmarkView);
         }
     }
 
