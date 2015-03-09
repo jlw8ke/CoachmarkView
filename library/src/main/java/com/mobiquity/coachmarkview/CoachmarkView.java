@@ -2,9 +2,12 @@ package com.mobiquity.coachmarkview;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
@@ -35,6 +38,7 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
     View titleView;
     TextView titleTextView;
     int id = CoachmarkStore.ALWAYS_SHOW;
+    List<String> appVersions;
 
     public CoachmarkView(Context context) {
         this(context, null);
@@ -52,6 +56,7 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
 
     private void init() {
         coachmarks = new ArrayList<>();
+        appVersions = new ArrayList<>();
         int backgroundColor = getContext().getResources().getColor(R.color.black_trans);
         coahcmarkOverlay = new CoachmarkOverlay(backgroundColor);
         setOnKeyListener(this);
@@ -67,6 +72,15 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
         titleTextView = ButterKnife.findById(titleView, textViewId);
         addView(this.titleView);
         invalidate();
+    }
+
+    public void setAppVersions(List<String> appVersions) {
+        this.appVersions = appVersions;
+        checkVersion();
+    }
+
+    public List<String> getAppVersions() {
+        return appVersions;
     }
 
     @Override
@@ -150,9 +164,25 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
         updateBitmap();
     }
 
+    public boolean checkVersion() {
+        String currentVersion = "";
+        try {
+            currentVersion = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        boolean validVersion = !appVersions.isEmpty() && (!TextUtils.isEmpty(currentVersion) && appVersions.contains(currentVersion));
+        if(!validVersion) {
+            coachmarkStore.storeCoachmarkState(id, false);
+        }
+        return validVersion;
+    }
+
     public boolean shouldShow() {
         return !coachmarks.isEmpty() &&
-                coachmarkStore.getCoachmarkState(id);
+                coachmarkStore.getCoachmarkState(id) &&
+                checkVersion();
     }
 
     public static class Builder {
@@ -175,7 +205,12 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
         }
 
         public Builder setId(int id) {
-            coachmarkView.id = id;
+            coachmarkView.setId(id);
+            return this;
+        }
+
+        public Builder setValidAppVersions(List<String> appVersions) {
+            coachmarkView.setAppVersions(appVersions);
             return this;
         }
 
