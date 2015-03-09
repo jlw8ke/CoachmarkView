@@ -30,7 +30,7 @@ public class PathGenerator {
         Point targetRightCenter = new Point(targetCenter.x + target.getWidth()/2, targetCenter.y);
         Point targetBottomCenter = new Point(targetCenter.x, targetCenter.y + target.getHeight()/2);
 
-        Point coachmarkCenter = new Point((int)coachmark.getX()+coachmark.getWidth()/2, (int)coachmark.getY()+coachmark.getHeight()/2);
+        Point coachmarkCenter = new Point(coachmark.getLeft()+coachmark.getWidth()/2, coachmark.getTop()+coachmark.getHeight()/2);
         Point coachmarkTopCenter = new Point(coachmarkCenter.x, coachmarkCenter.y - coachmark.getHeight()/2);
         Point coachmarkLeftCenter = new Point(coachmarkCenter.x - coachmark.getWidth()/2, coachmarkCenter.y);
         Point coachmarkRightCenter = new Point(coachmarkCenter.x + coachmark.getWidth()/2, coachmarkCenter.y);

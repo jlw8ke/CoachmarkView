@@ -171,7 +171,7 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
             e.printStackTrace();
         }
 
-        boolean validVersion = !appVersions.isEmpty() && (!TextUtils.isEmpty(currentVersion) && appVersions.contains(currentVersion));
+        boolean validVersion = appVersions.isEmpty() || (!TextUtils.isEmpty(currentVersion) && appVersions.contains(currentVersion));
         if(!validVersion) {
             coachmarkStore.storeCoachmarkState(id, false);
         }

@@ -52,13 +52,10 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        //
         coachmarkView = new CoachmarkView.Builder(this)
                 .addCoachmark(coachmark1)
                 .addCoachmark(new Coachmark.None(this, new ViewTarget(target2)))
                 .setTitleView(titleBar, R.id.coachmark_view_title)
-                .setId(1)
-                .setValidAppVersions(Arrays.asList("1.01"))
                 .build();
     }
 

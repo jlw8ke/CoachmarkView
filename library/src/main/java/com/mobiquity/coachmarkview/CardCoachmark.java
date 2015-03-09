@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +57,11 @@ public class CardCoachmark implements Coachmark{
                 ViewGroup parent = (ViewGroup) view.getParent();
                 parent.addView(segments);
                 parent.bringChildToFront(segments);
-                view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                    view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
             }
         });
     }
