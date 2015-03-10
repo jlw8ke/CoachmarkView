@@ -14,15 +14,10 @@ import java.util.List;
 public class PathGenerator {
 
     public static enum SegmentPath {
-        LEFT, RIGHT, UP, DOWN,
-        LEFT_DOWN, LEFT_UP,
-        RIGHT_DOWN, RIGHT_UP,
-        UP_LEFT, UP_RIGHT,
-        DOWN_LEFT, DOWN_RIGHT,
+        LEFT, RIGHT, TOP, BOTTOM,
         NONE
     }
-
-    public static List<Point> generatePath(Target target, View coachmark, SegmentPath path ) {
+    public static List<Point> generatePath(Target target, View coachmark, SegmentPath path) {
 
         Point targetCenter = target.getPoint();
         Point targetTopCenter = new Point(targetCenter.x, targetCenter.y - target.getHeight()/2);
@@ -36,37 +31,72 @@ public class PathGenerator {
         Point coachmarkRightCenter = new Point(coachmarkCenter.x + coachmark.getWidth()/2, coachmarkCenter.y);
         Point coachmarkBottomCenter = new Point(coachmarkCenter.x, coachmarkCenter.y + coachmark.getHeight()/2);
 
+        boolean targetHigher = targetCenter.y < coachmark.getTop();
+        boolean targetLower = targetCenter.y > coachmark.getBottom();
+        boolean targetLeft = targetCenter.x < coachmark.getLeft();
+        boolean targetRight = targetCenter.x > coachmark.getRight();
+
         List<Point> points = new ArrayList<>();
 
 
         switch (path) {
             case NONE:
                 return null;
-            case LEFT:
-                points.add(targetRightCenter);
-                points.add(new Point(coachmarkLeftCenter.x, targetRightCenter.y ));
-                break;
             case RIGHT:
-                points.add(targetLeftCenter);
-                points.add(new Point(coachmarkRightCenter.x, targetLeftCenter.y ));
+                if(targetHigher) {
+                    points.add(targetBottomCenter);
+                    points.add(new Point(targetBottomCenter.x, coachmarkRightCenter.y));
+                    points.add(coachmarkRightCenter);
+                } else if(targetLower) {
+                    points.add(targetTopCenter);
+                    points.add(new Point(targetTopCenter.x, coachmarkRightCenter.y));
+                    points.add(coachmarkRightCenter);
+                } else {
+                    points.add(targetLeftCenter);
+                    points.add(new Point(coachmarkRightCenter.x, targetLeftCenter.y));
+                }
                 break;
-            case UP:
-                points.add(targetTopCenter);
-                points.add(new Point(targetTopCenter.x, coachmarkBottomCenter.y));
+            case LEFT:
+                if(targetHigher) {
+                    points.add(targetBottomCenter);
+                    points.add(new Point(targetBottomCenter.x, coachmarkRightCenter.y));
+                    points.add(coachmarkLeftCenter);
+                } else if(targetLower) {
+                    points.add(targetTopCenter);
+                    points.add(new Point(targetTopCenter.x, coachmarkRightCenter.y));
+                    points.add(coachmarkLeftCenter);
+                } else {
+                    points.add(targetRightCenter);
+                    points.add(new Point(coachmarkLeftCenter.x, targetRightCenter.y));
+                }
                 break;
-            case DOWN:
-                points.add(targetBottomCenter);
-                points.add(new Point(targetBottomCenter.x, coachmarkTopCenter.y));
+            case BOTTOM:
+                if(targetLeft) {
+                    points.add(targetRightCenter);
+                    points.add(new Point(coachmarkBottomCenter.x, targetRightCenter.y ));
+                    points.add(coachmarkBottomCenter);
+                } else if(targetRight) {
+                    points.add(targetLeftCenter);
+                    points.add(new Point(coachmarkBottomCenter.x, targetLeftCenter.y ));
+                    points.add(coachmarkBottomCenter);
+                } else {
+                    points.add(targetTopCenter);
+                    points.add(new Point(targetTopCenter.x, coachmarkBottomCenter.y));
+                }
                 break;
-            case LEFT_DOWN:
-                points.add(targetRightCenter);
-                points.add(new Point(coachmarkTopCenter.x, targetRightCenter.y));
-                points.add(coachmarkTopCenter);
-                break;
-            case LEFT_UP:
-                points.add(targetRightCenter);
-                points.add(new Point(coachmarkBottomCenter.x, targetRightCenter.y));
-                points.add(coachmarkBottomCenter);
+            case TOP:
+                if(targetLeft) {
+                    points.add(targetRightCenter);
+                    points.add(new Point(coachmarkTopCenter.x, targetRightCenter.y ));
+                    points.add(coachmarkTopCenter);
+                } else if(targetRight) {
+                    points.add(targetLeftCenter);
+                    points.add(new Point(coachmarkTopCenter.x, targetLeftCenter.y ));
+                    points.add(coachmarkTopCenter);
+                } else {
+                    points.add(targetBottomCenter);
+                    points.add(new Point(targetBottomCenter.x, coachmarkTopCenter.y));
+                }
                 break;
         }
 

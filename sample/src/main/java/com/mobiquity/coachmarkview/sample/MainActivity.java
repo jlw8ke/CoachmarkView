@@ -9,13 +9,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.mobiquity.coachmarkview.Coachmark;
 import com.mobiquity.coachmarkview.CoachmarkView;
 import com.mobiquity.coachmarkview.CardCoachmark;
 import com.mobiquity.coachmarkview.PathGenerator;
 import com.mobiquity.coachmarkview.target.ViewTarget;
-
-import java.util.Arrays;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -37,8 +34,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
-        ViewTarget viewTarget1 = new ViewTarget(target1);
-        CardCoachmark coachmark1 = new CardCoachmark(this, viewTarget1, PathGenerator.SegmentPath.LEFT_DOWN);
+        ViewTarget viewTarget1 = new ViewTarget(target5);
+        CardCoachmark coachmark1 = new CardCoachmark(this, viewTarget1, PathGenerator.SegmentPath.RIGHT);
         coachmark1.setTitle("Test");
         coachmark1.setContent("This is a test card coachmark");
         coachmark1.setPosition(getResources().getDimensionPixelSize(R.dimen.left), getResources().getDimensionPixelSize(R.dimen.top), false);
@@ -54,7 +51,6 @@ public class MainActivity extends ActionBarActivity {
 
         coachmarkView = new CoachmarkView.Builder(this)
                 .addCoachmark(coachmark1)
-                .addCoachmark(new Coachmark.None(this, new ViewTarget(target2)))
                 .setTitleView(titleBar, R.id.coachmark_view_title)
                 .build();
     }
