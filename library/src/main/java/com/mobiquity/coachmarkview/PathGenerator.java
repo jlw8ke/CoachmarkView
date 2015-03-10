@@ -17,7 +17,8 @@ public class PathGenerator {
         LEFT, RIGHT, TOP, BOTTOM,
         NONE
     }
-    public static List<Point> generatePath(Target target, View coachmark, SegmentPath path) {
+
+    static List<Point> generatePath(Target target, View coachmark, SegmentPath path) {
 
         Point targetCenter = target.getPoint();
         Point targetTopCenter = new Point(targetCenter.x, targetCenter.y - target.getHeight()/2);
