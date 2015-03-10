@@ -37,8 +37,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
-        ViewTarget viewTarget1 = new ViewTarget(target5);
-        CardCoachmark coachmark1 = new CardCoachmark(this, viewTarget1, PathGenerator.SegmentPath.RIGHT);
+        ViewTarget viewTarget1 = new ViewTarget(target1);
+        CardCoachmark coachmark1 = new CardCoachmark(this, viewTarget1, PathGenerator.SegmentPath.LEFT);
         coachmark1.setTitle("Test");
         coachmark1.setContent("This is a test card coachmark");
         coachmark1.setPosition(0, 200);

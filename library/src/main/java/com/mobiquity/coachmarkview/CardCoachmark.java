@@ -37,7 +37,6 @@ public class CardCoachmark implements Coachmark{
     int strokeWidth;
     int markerRadius;
 
-    @TargetApi(21)
     public CardCoachmark(Context context, Target target, PathGenerator.SegmentPath path) {
         this.context = context;
         this.target = target;
@@ -102,6 +101,13 @@ public class CardCoachmark implements Coachmark{
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
         params.leftMargin = dpToPx(x);
         params.topMargin = dpToPx(y);
+        view.setLayoutParams(params);
+    }
+
+    @Override
+    public void setMaxWidth(int width) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        params.width = dpToPx(width);
         view.setLayoutParams(params);
     }
 

@@ -35,7 +35,7 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
 
     View titleView;
     TextView titleTextView;
-    int id = CoachmarkStore.ALWAYS_SHOW;
+    int coachmarkId = CoachmarkStore.ALWAYS_SHOW;
     List<String> appVersions;
 
     public CoachmarkView(Context context) {
@@ -58,6 +58,9 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
         int defaultColor = getContext().getResources().getColor(R.color.black_trans);
         coachmarkOverlay = new CoachmarkOverlay(defaultColor);
         setOnKeyListener(this);
+
+        //Disable items behind the coachmark overlay
+        setClickable(true);
 
         getViewTreeObserver().addOnGlobalLayoutListener(new UpdateOnGlobalLayout());
         setFocusableInTouchMode(true);
@@ -88,9 +91,8 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
         coachmarkOverlay.getBackgroundColor();
     }
 
-    @Override
-    public void setId(int id) {
-        this.id = id;
+    public void setCoachmarkId(int id) {
+        this.coachmarkId = id;
     }
 
     @Override
@@ -161,7 +163,7 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
 
     public void hide() {
         setVisibility(GONE);
-        coachmarkStore.storeCoachmarkState(id, false);
+        coachmarkStore.storeCoachmarkState(coachmarkId, false);
     }
 
     public void show() {
@@ -187,14 +189,14 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
 
         boolean validVersion = appVersions.isEmpty() || contains;
         if(!validVersion) {
-            coachmarkStore.storeCoachmarkState(id, false);
+            coachmarkStore.storeCoachmarkState(coachmarkId, false);
         }
         return validVersion;
     }
 
     public boolean shouldShow() {
         return !coachmarks.isEmpty() &&
-                coachmarkStore.getCoachmarkState(id) &&
+                coachmarkStore.getCoachmarkState(coachmarkId) &&
                 checkVersion();
     }
 
@@ -217,8 +219,8 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
             return this;
         }
 
-        public Builder setId(int id) {
-            coachmarkView.setId(id);
+        public Builder setCoachmarkId(int id) {
+            coachmarkView.setCoachmarkId(id);
             return this;
         }
 
@@ -236,6 +238,7 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
 
         private void insertCoachmarkView() {
             ((ViewGroup) activity.getWindow().getDecorView()).addView(coachmarkView);
+            coachmarkView.bringToFront();
         }
     }
 
