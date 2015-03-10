@@ -231,14 +231,30 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
 
         public CoachmarkView build() {
             if(coachmarkView.shouldShow()) {
-                insertCoachmarkView();
-            }
+                try {
+                    insertCoachmarkView();
+                } catch (MultipleCoachmarkViewException e) {
+                    e.printStackTrace();
+                }            }
             return coachmarkView;
         }
 
-        private void insertCoachmarkView() {
-            ((ViewGroup) activity.getWindow().getDecorView()).addView(coachmarkView);
+        private void insertCoachmarkView() throws MultipleCoachmarkViewException {
+            ViewGroup rootView = (ViewGroup) activity.getWindow().getDecorView();
+            for (int i = 0; i < rootView.getChildCount(); i++) {
+                if(rootView.getChildAt(i) instanceof CoachmarkView && ((CoachmarkView) rootView.getChildAt(i)).isVisible()) {
+                    throw new MultipleCoachmarkViewException();
+                }
+            }
+            rootView.addView(coachmarkView);
             coachmarkView.bringToFront();
+        }
+
+        private static class MultipleCoachmarkViewException extends Exception {
+            public MultipleCoachmarkViewException() {
+                super("Only one CoachmarkView may be visible at once through the builder");
+            }
+
         }
     }
 
