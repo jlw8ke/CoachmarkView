@@ -13,7 +13,7 @@ public interface Coachmark {
     public Target getTarget();
     public void setTarget(Target target);
     public View getView();
-    public void setPosition(int x, int y, boolean centered);
+    public void setPosition(int x, int y);
 
     public class None implements Coachmark {
         Target target;
@@ -40,7 +40,7 @@ public interface Coachmark {
         }
 
         @Override
-        public void setPosition(int x, int y, boolean centered) {
+        public void setPosition(int x, int y) {
 
         }
     }

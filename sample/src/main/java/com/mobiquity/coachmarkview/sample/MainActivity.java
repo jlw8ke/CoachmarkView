@@ -38,7 +38,8 @@ public class MainActivity extends ActionBarActivity {
         CardCoachmark coachmark1 = new CardCoachmark(this, viewTarget1, PathGenerator.SegmentPath.RIGHT);
         coachmark1.setTitle("Test");
         coachmark1.setContent("This is a test card coachmark");
-        coachmark1.setPosition(getResources().getDimensionPixelSize(R.dimen.left), getResources().getDimensionPixelSize(R.dimen.top), false);
+        coachmark1.setPosition(0, 200);
+        coachmark1.centerHorizontal();
 
         View titleBar = LayoutInflater.from(this).inflate(R.layout.coachmark_title, null, false);
         ImageButton closeButton = ButterKnife.findById(titleBar, R.id.coachmark_view_close);

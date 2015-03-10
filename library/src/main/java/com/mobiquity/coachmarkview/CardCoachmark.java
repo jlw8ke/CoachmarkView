@@ -8,6 +8,7 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,13 +92,28 @@ public class CardCoachmark implements Coachmark{
     }
 
     @Override
-    public void setPosition(int x, int y, boolean centered) {
+    public void setPosition(int x, int y) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
-        params.leftMargin = x;
-        if(centered) {
-            params.rightMargin = x;
-        }
-        params.topMargin = y;
+        params.leftMargin = dpToPx(x);
+        params.topMargin = dpToPx(y);
+        view.setLayoutParams(params);
+    }
+
+    private int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
+    }
+
+    public void centerHorizontal() {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)view.getLayoutParams();
+        params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+        view.setLayoutParams(params);
+    }
+
+    public void centerVertical() {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)view.getLayoutParams();
+        params.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
         view.setLayoutParams(params);
     }
 
