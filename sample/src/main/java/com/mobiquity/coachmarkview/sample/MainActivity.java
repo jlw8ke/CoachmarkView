@@ -14,6 +14,9 @@ import com.mobiquity.coachmarkview.CardCoachmark;
 import com.mobiquity.coachmarkview.PathGenerator;
 import com.mobiquity.coachmarkview.target.ViewTarget;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -53,6 +56,7 @@ public class MainActivity extends ActionBarActivity {
         coachmarkView = new CoachmarkView.Builder(this)
                 .addCoachmark(coachmark1)
                 .setTitleView(titleBar, R.id.coachmark_view_title)
+                .setValidAppVersions(Arrays.asList("1.*"))
                 .build();
     }
 

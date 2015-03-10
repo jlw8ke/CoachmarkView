@@ -75,7 +75,6 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
 
     public void setAppVersions(List<String> appVersions) {
         this.appVersions = appVersions;
-        checkVersion();
     }
 
     public List<String> getAppVersions() {
@@ -171,7 +170,15 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
             e.printStackTrace();
         }
 
-        boolean validVersion = appVersions.isEmpty() || (!TextUtils.isEmpty(currentVersion) && appVersions.contains(currentVersion));
+        boolean contains = false;
+        for(String version : appVersions) {
+            if(currentVersion.matches(version)) {
+                contains = true;
+                break;
+            }
+        }
+
+        boolean validVersion = appVersions.isEmpty() || contains;
         if(!validVersion) {
             coachmarkStore.storeCoachmarkState(id, false);
         }
