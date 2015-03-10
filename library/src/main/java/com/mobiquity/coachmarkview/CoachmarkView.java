@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
@@ -32,7 +31,7 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
 
     //A bitmap that overlays the window for the coachmarks to draw on
     Bitmap bitmapBuffer;
-    CoachmarkOverlay coahcmarkOverlay;
+    CoachmarkOverlay coachmarkOverlay;
 
     View titleView;
     TextView titleTextView;
@@ -56,8 +55,8 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
     private void init() {
         coachmarks = new ArrayList<>();
         appVersions = new ArrayList<>();
-        int backgroundColor = getContext().getResources().getColor(R.color.black_trans);
-        coahcmarkOverlay = new CoachmarkOverlay(backgroundColor);
+        int defaultColor = getContext().getResources().getColor(R.color.black_trans);
+        coachmarkOverlay = new CoachmarkOverlay(defaultColor);
         setOnKeyListener(this);
 
         getViewTreeObserver().addOnGlobalLayoutListener(new UpdateOnGlobalLayout());
@@ -81,6 +80,14 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
         return appVersions;
     }
 
+    public void setBackgroundColor(int color) {
+        coachmarkOverlay.setBackgroundColor(color);
+    }
+
+    public void getBackgroundColor() {
+        coachmarkOverlay.getBackgroundColor();
+    }
+
     @Override
     public void setId(int id) {
         this.id = id;
@@ -89,7 +96,7 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
     @Override
     protected void dispatchDraw(Canvas canvas) {
         // Draw darkened overlay
-        coahcmarkOverlay.erase(bitmapBuffer);
+        coachmarkOverlay.erase(bitmapBuffer);
 
         for (Coachmark coachmark : coachmarks) {
             Target target = coachmark.getTarget();
@@ -101,15 +108,15 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
                 switch (target.getTargetStyle()) {
                     case CIRCLE:
                         float radius = (float) Math.sqrt(Math.pow(target.getWidth(), 2) + Math.pow(target.getHeight(), 2));
-                        coahcmarkOverlay.drawCircleCoachmark(bitmapBuffer, center.x, center.y, radius);
+                        coachmarkOverlay.drawCircleCoachmark(bitmapBuffer, center.x, center.y, radius);
                         break;
                     case RECT:
-                        coahcmarkOverlay.drawRectCoachmark(bitmapBuffer, leftCorner.x, leftCorner.y, target.getWidth(), target.getHeight());
+                        coachmarkOverlay.drawRectCoachmark(bitmapBuffer, leftCorner.x, leftCorner.y, target.getWidth(), target.getHeight());
                         break;
                 }
             }
 
-            coahcmarkOverlay.drawToCanvas(canvas, bitmapBuffer);
+            coachmarkOverlay.drawToCanvas(canvas, bitmapBuffer);
 
             //Add the coachmark if the target has one and it has not already been added
             if(coachmark != null && coachmark.getView().getParent() == null) {

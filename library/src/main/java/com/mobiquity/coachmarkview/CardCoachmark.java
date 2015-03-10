@@ -10,7 +10,6 @@ import android.graphics.Point;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -67,6 +66,11 @@ public class CardCoachmark implements Coachmark{
                 }
             }
         });
+    }
+
+    private ViewGroup.LayoutParams defaultBounds() {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        return params;
     }
 
     public String getTitle() {
@@ -132,14 +136,6 @@ public class CardCoachmark implements Coachmark{
     @Override
     public View getView() {
         return view;
-    }
-
-    private ViewGroup.LayoutParams defaultBounds() {
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.leftMargin = context.getResources().getDimensionPixelSize(R.dimen.coachmark_left_default);
-        params.rightMargin = context.getResources().getDimensionPixelSize(R.dimen.coachmark_right_default);
-        params.topMargin = context.getResources().getDimensionPixelSize(R.dimen.coachmark_top_default);
-        return params;
     }
 
     public View getSegments() {

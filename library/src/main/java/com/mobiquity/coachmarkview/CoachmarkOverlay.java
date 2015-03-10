@@ -48,6 +48,10 @@ class CoachmarkOverlay {
         this.backgroundColor = backgroundColor;
     }
 
+    public int getBackgroundColor() {
+        return backgroundColor;
+    }
+
     public void drawToCanvas(Canvas canvas, Bitmap bitmapBuffer) {
         canvas.drawBitmap(bitmapBuffer, 0, 0, paint);
     }
