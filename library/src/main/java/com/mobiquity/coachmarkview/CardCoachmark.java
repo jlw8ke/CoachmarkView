@@ -1,5 +1,6 @@
 package com.mobiquity.coachmarkview;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -37,6 +38,7 @@ public class CardCoachmark implements Coachmark{
     int strokeWidth;
     int markerRadius;
 
+    @TargetApi(21)
     public CardCoachmark(Context context, Target target, PathGenerator.SegmentPath path) {
         this.context = context;
         this.target = target;
@@ -45,7 +47,7 @@ public class CardCoachmark implements Coachmark{
         strokeWidth = context.getResources().getDimensionPixelSize(R.dimen.stroke_width_default);
         markerRadius = context.getResources().getDimensionPixelSize(R.dimen.radius_default);
 
-        view = LayoutInflater.from(context).inflate(R.layout.card_coachmark, null, true);
+        view = View.inflate(context, R.layout.card_coachmark, null);
         titleText = ButterKnife.findById(view, R.id.coachmark_title);
         contentText = ButterKnife.findById(view, R.id.coachmark_content);
         view.setLayoutParams(defaultBounds());
@@ -58,7 +60,7 @@ public class CardCoachmark implements Coachmark{
                 ViewGroup parent = (ViewGroup) view.getParent();
                 parent.addView(segments);
                 parent.bringChildToFront(segments);
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 } else {
                     view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
