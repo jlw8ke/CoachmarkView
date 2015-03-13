@@ -26,26 +26,29 @@ import butterknife.ButterKnife;
  * Created by jwashington on 12/12/14.
  */
 public class CardCoachmark implements Coachmark{
-    private Context context;
-    private View view;
-    private TextView titleText;
-    private TextView contentText;
+    protected Context context;
+    protected View view;
+    protected TextView titleText;
+    protected TextView contentText;
 
-    private Target target;
-    private PathGenerator.SegmentPath path;
+    protected Target target;
+    protected PathGenerator.SegmentPath path;
 
-    int strokeWidth;
-    int markerRadius;
+    protected int strokeWidth;
+    protected int markerRadius;
+
+    private DisplayMetrics displayMetrics;
 
     public CardCoachmark(Context context, Target target, PathGenerator.SegmentPath path) {
         this.context = context;
         this.target = target;
         this.path = path;
+        displayMetrics = context.getResources().getDisplayMetrics();
 
         strokeWidth = context.getResources().getDimensionPixelSize(R.dimen.stroke_width_default);
         markerRadius = context.getResources().getDimensionPixelSize(R.dimen.radius_default);
 
-        view = View.inflate(context, R.layout.card_coachmark, null);
+        view = View.inflate(context, getLayout(), null);
         titleText = ButterKnife.findById(view, R.id.coachmark_title);
         contentText = ButterKnife.findById(view, R.id.coachmark_content);
         view.setLayoutParams(defaultBounds());
@@ -65,6 +68,10 @@ public class CardCoachmark implements Coachmark{
                 }
             }
         });
+    }
+
+    public int getLayout() {
+        return R.layout.card_coachmark;
     }
 
     private ViewGroup.LayoutParams defaultBounds() {
@@ -96,27 +103,6 @@ public class CardCoachmark implements Coachmark{
         this.markerRadius = markerRadius;
     }
 
-    @Override
-    public void setPosition(int x, int y) {
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
-        params.leftMargin = dpToPx(x);
-        params.topMargin = dpToPx(y);
-        view.setLayoutParams(params);
-    }
-
-    @Override
-    public void setMaxWidth(int width) {
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
-        params.width = dpToPx(width);
-        view.setLayoutParams(params);
-    }
-
-    private int dpToPx(int dp) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-        return px;
-    }
-
     public void centerHorizontal() {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)view.getLayoutParams();
         params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
@@ -126,6 +112,21 @@ public class CardCoachmark implements Coachmark{
     public void centerVertical() {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)view.getLayoutParams();
         params.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        view.setLayoutParams(params);
+    }
+
+    @Override
+    public void setPosition(float x, float y) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        params.leftMargin = CoachmarkUtils.dpToPx(x, displayMetrics.xdpi, displayMetrics);
+        params.topMargin = CoachmarkUtils.dpToPx(y, displayMetrics.ydpi, displayMetrics);
+        view.setLayoutParams(params);
+    }
+
+    @Override
+    public void setMaxWidth(float width) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        params.width = CoachmarkUtils.dpToPx(width, displayMetrics.xdpi, displayMetrics);
         view.setLayoutParams(params);
     }
 

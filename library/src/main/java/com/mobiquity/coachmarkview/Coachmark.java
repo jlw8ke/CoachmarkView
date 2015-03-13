@@ -13,8 +13,8 @@ public interface Coachmark {
     public Target getTarget();
     public void setTarget(Target target);
     public View getView();
-    public void setPosition(int x, int y);
-    public void setMaxWidth(int width);
+    public void setPosition(float x, float y);
+    public void setMaxWidth(float width);
 
     public class None implements Coachmark {
         Target target;
@@ -41,12 +41,12 @@ public interface Coachmark {
         }
 
         @Override
-        public void setPosition(int x, int y) {
+        public void setPosition(float x, float y) {
 
         }
 
         @Override
-        public void setMaxWidth(int width) {
+        public void setMaxWidth(float width) {
 
         }
     }

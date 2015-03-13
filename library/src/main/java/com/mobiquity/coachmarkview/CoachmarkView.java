@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.mobiquity.coachmarkview.target.Target;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -200,13 +202,18 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
                 checkVersion();
     }
 
-    public static class Builder {
-        final CoachmarkView coachmarkView;
+    public static class Builder<T extends CoachmarkView> {
+        final T coachmarkView;
         private final Activity activity;
 
-        public Builder(Activity activity) {
+        public Builder(Activity activity, Class<T> clazz) {
             this.activity = activity;
-            coachmarkView = new CoachmarkView(activity);
+            try {
+                Constructor<T> coachmarkConstructor = clazz.getConstructor(Context.class);
+                coachmarkView = coachmarkConstructor.newInstance(activity);
+            } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+                throw new IllegalArgumentException(clazz.getName() + "does not extend CoachmarkView", e);
+            }
         }
 
         public Builder addCoachmark(Coachmark coachmark) {
@@ -229,7 +236,7 @@ public class CoachmarkView extends RelativeLayout implements View.OnKeyListener{
             return this;
         }
 
-        public CoachmarkView build() {
+        public T build() {
             if(coachmarkView.shouldShow()) {
                 try {
                     insertCoachmarkView();
